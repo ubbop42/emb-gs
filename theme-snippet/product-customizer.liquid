@@ -1,0 +1,92 @@
+{% comment %}
+  product-customizer.liquid
+  --------------------------------
+  Include this in sections/main-product.liquid (or your product template),
+  ABOVE the closing </form> of the "add to cart" form, or anywhere on the
+  page as long as data-form-selector can find that form.
+
+  Set a product tag to drive `product_type_key` — the example below reads a
+  tag like "embroiderable:hoodie". Adjust to however you tag customizable
+  products in your catalog.
+
+  Color-aware mockups, with ZERO per-color Liquid logic:
+  Tag each product photo's ALT TEXT as "{Color} - {Placement}", e.g.
+  "Black - Front", "Black - Back", "Navy - Front". This snippet just dumps
+  every product image's {alt, url} as JSON — the widget's JavaScript parses
+  the alt-text convention and builds the color→placement map itself. Add a
+  new color? Just add photos with that color's alt text; no code changes.
+  Missing a shot for one placement in a color? The widget falls back to that
+  color's front photo, then to any color's shot for that placement.
+
+  At bigger catalog scale, replace product.images with a structured JSON
+  metafield (e.g. custom.embroidery_mockups) fed by a bulk-editing tool like
+  Matrixify instead of hand-typing alt text on every photo — same JSON shape
+  going into data-product-images, so no widget changes needed either way.
+{% endcomment %}
+
+{% assign product_type_key = 'tshirt' %}
+{% assign is_embroiderable = false %}
+{% for tag in product.tags %}
+  {% if tag contains 'embroiderable:' %}
+    {% assign is_embroiderable = true %}
+    {% assign product_type_key = tag | split: ':' | last %}
+  {% endif %}
+{% endfor %}
+
+{% if is_embroiderable %}
+  {% comment %} Add-on products for pricing — see README "Installing into an actual Shopify store". {% endcomment %}
+  {% assign addon_variant_id = 'REPLACE_WITH_PLACEMENT_ADDON_VARIANT_ID' %}
+  {% assign stitch_addon_variant_id = 'REPLACE_WITH_STITCH_ADDON_VARIANT_ID' %}
+
+  {% comment %} Which variant option is the color? Most stores name it "Color" or "Colour". {% endcomment %}
+  {% assign color_option_index = 0 %}
+  {% for option in product.options_with_values %}
+    {% if option.name contains 'Colo' %}{% assign color_option_index = forloop.index %}{% endif %}
+  {% endfor %}
+  {% assign option_key = 'option' | append: color_option_index %}
+  {% assign initial_color = '' %}
+  {% if color_option_index > 0 %}
+    {% assign initial_color = product.selected_or_first_available_variant[option_key] %}
+  {% endif %}
+
+  {% comment %} variant id -> color, so the widget can react to the theme's own variant picker. {% endcomment %}
+  {% capture variant_color_json %}{
+    {% for variant in product.variants %}
+      "{{ variant.id }}": {{ variant[option_key] | default: '' | json }}{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  }{% endcapture %}
+
+  {% comment %} Every product photo, raw — the widget parses the "{Color} - {Placement}" alt-text convention itself. {% endcomment %}
+  {% capture product_images_json %}[
+    {% for image in product.images %}
+      { "alt": {{ image.alt | default: '' | json }}, "url": {{ image | image_url: width: 1200 | json }} }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ]{% endcapture %}
+
+  <link rel="stylesheet" href="https://your-backend.example.com/widget.css">
+
+  <div id="embroidery-customizer"
+       data-product-type="{{ product_type_key }}"
+       data-product-images='{{ product_images_json }}'
+       data-initial-color="{{ initial_color }}"
+       data-variant-color-map='{{ variant_color_json }}'
+       data-mockup-src="{{ product.featured_image | image_url: width: 1000 }}"
+       data-base-price="{{ product.price | money_without_currency }}"
+       data-addon-variant-id="{{ addon_variant_id }}"
+       data-stitch-addon-variant-id="{{ stitch_addon_variant_id }}"
+       data-px-per-inch="75"
+       data-backend-url="https://your-backend.example.com"
+       data-form-selector="form[action*='/cart/add']">
+  </div>
+
+  <script src="https://your-backend.example.com/widget.js" defer></script>
+
+  <script>
+    // Disable "Add to cart" until a design is confirmed, for embroiderable products.
+    document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll("form[action*='/cart/add'] [type=submit]").forEach(function (btn) {
+        btn.disabled = true;
+      });
+    });
+  </script>
+{% endif %}

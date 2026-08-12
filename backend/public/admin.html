@@ -1,0 +1,97 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Embroidery Production Queue</title>
+<style>
+  body { font-family: -apple-system, Arial, sans-serif; margin: 24px; background: #f7f7f8; color: #222; }
+  h1 { font-size: 20px; }
+  table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; }
+  th, td { padding: 10px 12px; border-bottom: 1px solid #eee; text-align: left; font-size: 14px; vertical-align: top; }
+  th { background: #fafafa; }
+  img.thumb { width: 80px; border-radius: 6px; border: 1px solid #ddd; display: block; margin-bottom: 4px; }
+  .placement-block { display: inline-block; text-align: center; margin: 0 8px 8px 0; font-size: 11px; color: #555; }
+  select { padding: 4px 6px; border-radius: 4px; }
+  .status-received { color: #b45309; }
+  .status-in_production { color: #1d4ed8; }
+  .status-completed { color: #15803d; }
+  .empty { padding: 40px; text-align: center; color: #888; }
+</style>
+</head>
+<body>
+  <h1>Embroidery Production Queue</h1>
+  <p>Every order with a customized line item shows up here automatically, pulled by the <code>orders/create</code> webhook.</p>
+  <table id="orders-table">
+    <thead>
+      <tr>
+        <th>Placements</th>
+        <th>Order</th>
+        <th>Product</th>
+        <th>Extra charge</th>
+        <th>Qty</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="orders-body"></tbody>
+  </table>
+  <div id="empty" class="empty" style="display:none;">No orders yet. Place a test order or run the simulate-order script.</div>
+
+<script>
+async function load() {
+  const res = await fetch('/admin/api/orders');
+  const orders = await res.json();
+  const body = document.getElementById('orders-body');
+  body.innerHTML = '';
+  document.getElementById('empty').style.display = orders.length ? 'none' : 'block';
+
+  orders.forEach(o => {
+    const tr = document.createElement('tr');
+
+    const placementBlocks = (o.placements || []).map(p => {
+      const el = (p.elements || [])[0];
+      const detail = el
+        ? (el.type === 'text'
+            ? `"${el.text}" · ~${(el.estimatedStitches || 0).toLocaleString()} stitches`
+            : `<a href="${p.originalUrl}" target="_blank">artwork</a> (${el.sizeInches || '?'}"${el.bgRemoved ? ', bg removed' : ''}) · ~${(el.estimatedStitches || 0).toLocaleString()} stitches`)
+        : '';
+      return `
+        <div class="placement-block">
+          ${p.previewUrl ? `<img class="thumb" src="${p.previewUrl}">` : ''}
+          <div>${p.placement}</div>
+          <div>${detail}</div>
+        </div>`;
+    }).join('');
+
+    tr.innerHTML = `
+      <td>${placementBlocks || '—'}</td>
+      <td>${o.shopifyOrderNumber || o.shopifyOrderId}</td>
+      <td>${o.productTitle}</td>
+      <td>${o.additionalCharge ? `+$${o.additionalCharge.toFixed(2)}<br><span style="font-size:11px;color:#888;">placement $${(o.placementFee||0).toFixed(2)} · stitch $${(o.stitchSurcharge||0).toFixed(2)}</span>` : '—'}</td>
+      <td>${o.quantity}</td>
+      <td>
+        <select data-id="${o.recordId}" class="status-select status-${o.status}">
+          <option value="received" ${o.status==='received'?'selected':''}>Received</option>
+          <option value="in_production" ${o.status==='in_production'?'selected':''}>In production</option>
+          <option value="completed" ${o.status==='completed'?'selected':''}>Completed</option>
+        </select>
+      </td>
+    `;
+    body.appendChild(tr);
+  });
+
+  document.querySelectorAll('.status-select').forEach(sel => {
+    sel.addEventListener('change', async () => {
+      await fetch(`/admin/api/orders/${sel.dataset.id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: sel.value }),
+      });
+      load();
+    });
+  });
+}
+load();
+setInterval(load, 5000); // simple polling refresh
+</script>
+</body>
+</html>

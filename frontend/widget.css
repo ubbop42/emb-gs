@@ -1,0 +1,43 @@
+.ec-widget { display: flex; gap: 24px; flex-wrap: wrap; font-family: inherit; }
+.ec-stage { flex: 1 1 380px; max-width: 480px; }
+.ec-stage canvas { width: 100%; height: auto; border: 1px solid #ddd; border-radius: 8px; touch-action: none; cursor: grab; }
+.ec-controls { flex: 1 1 260px; max-width: 340px; display: flex; flex-direction: column; gap: 12px; }
+.ec-field-label { font-size: 14px; font-weight: 600; }
+.ec-field { display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
+.ec-field input, .ec-field select { padding: 8px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
+
+.ec-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.ec-chip {
+  position: relative; display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 26px 8px 12px; border: 1px solid #ccc; border-radius: 999px;
+  background: #fff; cursor: pointer; font-size: 13px; color: #333;
+}
+.ec-chip.active { border-color: #111; box-shadow: 0 0 0 1px #111 inset; }
+.ec-chip.filled { background: #f0fdf4; border-color: #16a34a; color: #14532d; }
+.ec-chip-dot { display: none; }
+.ec-chip-remove {
+  position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+  font-size: 14px; line-height: 1; color: #999; display: none;
+}
+.ec-chip.filled .ec-chip-remove { display: inline; }
+.ec-chip.filled .ec-chip-remove:hover { color: #b91c1c; }
+
+.ec-tabs { display: flex; gap: 8px; }
+.ec-tab { flex: 1; padding: 8px; border: 1px solid #ccc; background: #fff; border-radius: 6px; cursor: pointer; }
+.ec-tab.active { background: #111; color: #fff; border-color: #111; }
+.ec-panel.hidden { display: none; }
+.ec-hint { font-size: 12px; color: #777; margin: 0; }
+
+.ec-price-summary { font-size: 13px; font-weight: 600; color: #111; margin: 0; padding: 8px 10px; background: #f7f7f8; border-radius: 6px; }
+
+.ec-confirm-btn { padding: 12px; border: none; border-radius: 6px; background: #111; color: #fff; font-weight: 600; cursor: pointer; }
+.ec-confirm-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.ec-status { font-size: 13px; min-height: 16px; }
+
+.ec-color-label { font-size: 12px; color: #555; margin: 6px 0 0; text-align: center; }
+.ec-image-size-label { font-size: 13px; }
+.ec-image-size-input { width: 100%; }
+
+.ec-checkbox-field { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #333; }
+.ec-checkbox-field input { width: auto; }
+.ec-stitch-label { font-size: 12px; color: #555; margin: 0; min-height: 14px; }

@@ -1,0 +1,112 @@
+[
+  {
+    "id": "e65e51a2-cd14-4069-ab04-665f89f487f7",
+    "productType": "hat",
+    "placements": [
+      {
+        "placement": "front",
+        "elements": [
+          {
+            "type": "text",
+            "text": "GO TEAM",
+            "estimatedStitches": 18000
+          }
+        ],
+        "previewFile": "preview-front-d9566e20-8cdb-4ce6-9103-f366f5b5bf63.png",
+        "originalFile": null
+      }
+    ],
+    "placementFee": 0,
+    "stitchSurcharge": 0,
+    "additionalCharge": 0,
+    "createdAt": "2026-08-11T19:31:29.592Z"
+  },
+  {
+    "id": "7dad7ae7-094e-439b-95ba-5f4347755760",
+    "productType": "hoodie",
+    "placements": [
+      {
+        "placement": "front",
+        "elements": [
+          {
+            "type": "text",
+            "text": "BE STRONG",
+            "font": "\"Times New Roman\", serif",
+            "size": 24,
+            "color": "#1a1a1a",
+            "estimatedStitches": 5627
+          }
+        ],
+        "previewFile": "preview-front-4214a478-33c3-4b96-a90d-4d59420ccd1f.png",
+        "originalFile": null
+      }
+    ],
+    "placementFee": 0,
+    "stitchSurcharge": 0,
+    "additionalCharge": 0,
+    "createdAt": "2026-08-12T17:19:54.565Z"
+  },
+  {
+    "id": "529cdf63-1824-4634-af52-22a7eb8ee243",
+    "productType": "hat",
+    "placements": [
+      {
+        "placement": "front",
+        "elements": [
+          {
+            "type": "image",
+            "sizeInches": 3,
+            "bgRemoved": true,
+            "estimatedStitches": 7604
+          }
+        ],
+        "previewFile": "preview-front-fb7e51c3-12bf-4daa-99a0-adbc0b0b2903.png",
+        "originalFile": "original-front-f8ac34fd-24ce-4a3c-90e0-154dcf85e7b9.png"
+      },
+      {
+        "placement": "right-panel",
+        "elements": [
+          {
+            "type": "text",
+            "text": "be strong",
+            "font": "\"Times New Roman\", serif",
+            "size": 48,
+            "color": "#1a1a1a",
+            "estimatedStitches": 19768
+          }
+        ],
+        "previewFile": "preview-right-panel-c3e48276-6b9f-4d21-b9d9-4871201eaad2.png",
+        "originalFile": null
+      }
+    ],
+    "placementFee": 3,
+    "stitchSurcharge": 7.5,
+    "additionalCharge": 10.5,
+    "createdAt": "2026-08-12T17:35:14.720Z"
+  },
+  {
+    "id": "95c37182-532d-4172-b36b-7644bc31f42a",
+    "productType": "hat",
+    "placements": [
+      {
+        "placement": "front",
+        "elements": [
+          {
+            "type": "text",
+            "text": "BE STRONG",
+            "font": "\"Times New Roman\", serif",
+            "size": 12,
+            "color": "#1a1a1a",
+            "estimatedStitches": 1407
+          }
+        ],
+        "previewFile": "preview-front-d2e4cf81-b474-4ba9-9131-dcd2430d455e.png",
+        "originalFile": null
+      }
+    ],
+    "placementFee": 0,
+    "stitchSurcharge": 0,
+    "additionalCharge": 0,
+    "createdAt": "2026-08-12T17:35:29.250Z"
+  }
+]
