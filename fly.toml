@@ -3,7 +3,7 @@
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'embroidery-app-4-proud-reed-7703'
+app = 'emb-gs-v1'
 primary_region = 'yyz'
 
 [http_service]
